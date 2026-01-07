@@ -1,3 +1,5 @@
+import ApiResponse from "./ApiResponse";
+
 export default interface Product {
   id: number;
   title: string;
