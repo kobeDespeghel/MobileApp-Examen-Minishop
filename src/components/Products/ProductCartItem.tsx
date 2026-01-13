@@ -5,73 +5,36 @@ import {
   StyleSheet,
   TextInput,
 } from "react-native";
-import { useEffect, useState } from "react";
-import Product from "../../models/Product";
+import { useState } from "react";
+import Product, { CartProduct } from "../../models/Product";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../../navigation/HomeStackNavigator";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   addToCart,
+  decreaseQuantity,
+  increaseQuantity,
   removeFromCart,
-  setQuantity as setQuantityCartSlice,
+  setQuantity,
 } from "../../redux/slices/cartSlice";
-import {
-  selectIsProductInCart,
-  selectProductQuantity,
-} from "../../redux/selectors/cartSelectors";
 
 interface Props {
-  product: Product;
+  product: CartProduct;
 }
 
 export default function ProductListItem({ product }: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams, "ProductList">>();
+  //   const [quantity, setQuantity] = useState(product.quantity);
 
-  const quantityInCart = useSelector((state: any) =>
-    selectProductQuantity(state, product.id)
-  );
-
-  const [quantity, setQuantity] = useState(quantityInCart);
-
-  //redux
   const dispatch = useDispatch();
-  const isInCart = useSelector((state: any) =>
-    selectIsProductInCart(state, product.id)
-  );
 
-  useEffect(() => {
-    if (!isInCart) {
-      setQuantity(1);
-    } else {
-      setQuantity(quantityInCart);
-    }
-  }, [isInCart, quantityInCart]);
+  //   const onAddToCart = () => {
+  //     const cartProduct = { ...product, quantity };
 
-  useEffect(() => {
-    if (isInCart) {
-      dispatch(setQuantityCartSlice({ productId: product.id, quantity }));
-    }
-  }, [quantity]);
-
-  const onAddToCart = () => {
-    const cartProduct = { ...product, quantity };
-    dispatch(addToCart(cartProduct));
-  };
-
-  const onRemoveFromCart = () => {
-    setQuantity(1);
-    dispatch(removeFromCart(product.id));
-  };
-
-  const handleButtonPress = () => {
-    if (isInCart) {
-      onRemoveFromCart();
-    } else {
-      onAddToCart();
-    }
-  };
+  //     dispatch(addToCart(cartProduct));
+  //   };
 
   return (
     <TouchableOpacity
@@ -93,34 +56,37 @@ export default function ProductListItem({ product }: Props) {
 
         <View style={styles.footer}>
           <TouchableOpacity
-            style={isInCart ? styles.removeButton : styles.addButton}
-            onPress={handleButtonPress}
+            style={styles.removeButton}
+            onPress={() => dispatch(removeFromCart(product.id))}
             activeOpacity={0.7}
           >
-            <Text style={styles.buttonText}>
-              {isInCart ? "Remove from Cart" : "Add to Cart"}
-            </Text>
+            <Text style={styles.buttonText}>Remove</Text>
           </TouchableOpacity>
 
           <View style={styles.quantityContainer}>
             <TouchableOpacity
-              onPress={() => setQuantity(Math.max(1, quantity - 1))}
+              onPress={() => dispatch(decreaseQuantity(product.id))}
               style={styles.quantityButton}
             >
               <Text style={styles.quantityButtonText}>−</Text>
             </TouchableOpacity>
             <TextInput
               style={styles.quantityInput}
-              value={quantity.toString()}
+              value={product.quantity.toString()}
               onChangeText={(text) => {
                 const num = parseInt(text) || 1;
-                setQuantity(Math.max(1, num));
+                dispatch(
+                  setQuantity({
+                    productId: product.id,
+                    quantity: Math.max(1, num),
+                  })
+                );
               }}
               keyboardType="number-pad"
               maxLength={3}
             />
             <TouchableOpacity
-              onPress={() => setQuantity(quantity + 1)}
+              onPress={() => dispatch(increaseQuantity(product.id))}
               style={styles.quantityButton}
             >
               <Text style={styles.quantityButtonText}>+</Text>
@@ -167,12 +133,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  addButton: {
-    backgroundColor: "#3498db",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 6,
   },
   removeButton: {
     backgroundColor: "#e74c3c",

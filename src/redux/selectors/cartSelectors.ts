@@ -22,3 +22,16 @@ export const selectTotalPrice = createSelector(
       0
     )
 );
+
+export const selectIsProductInCart = createSelector(
+  [selectCartProducts, (_, productId: number) => productId],
+  (products, productId) => products.some((product) => product.id === productId)
+);
+
+export const selectProductQuantity = createSelector(
+  [selectCartProducts, (_, productId: number) => productId],
+  (products, productId) => {
+    var quantity = products.find((p) => p.id === productId)?.quantity || 1;
+    return quantity;
+  }
+);
