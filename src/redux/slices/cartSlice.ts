@@ -1,10 +1,28 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Product, { CartProduct } from "../../models/Product";
-
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CartProduct } from "../../models/Product";
 interface CartState {
   status: "idle" | "loading" | "succeeded" | "failed";
   products: CartProduct[];
 }
+
+export const fetchCartFromStorage = createAsyncThunk(
+  "cart/fetchCartFromStorage",
+  async (_, { rejectWithValue }) => {
+    console.log("Fetching cart from storage...");
+    try {
+      const cartData = await AsyncStorage.getItem("@cart");
+      if (!cartData) {
+        return []; // Return empty array if no cart in storage
+      }
+      const parsedCart = JSON.parse(cartData) as CartProduct[];
+      return parsedCart;
+    } catch (error) {
+      console.error("Error fetching cart from storage:", error);
+      return rejectWithValue("Failed to load cart from storage: " + error);
+    }
+  }
+);
 
 const initState: CartState = {
   status: "idle",
@@ -36,7 +54,7 @@ export const cartSlice = createSlice({
         (product) => product.id === action.payload
       );
       if (product) {
-        product.quantity += 1;
+        product.quantity++;
       }
     },
     decreaseQuantity: (state, action: PayloadAction<number>) => {
@@ -62,7 +80,28 @@ export const cartSlice = createSlice({
       state.products = [];
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCartFromStorage.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchCartFromStorage.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.products = action.payload;
+      })
+      .addCase(fetchCartFromStorage.rejected, (state) => {
+        state.status = "failed";
+      });
+  },
 });
+
+export const saveToAsyncStorage = async (value: CartProduct[]) => {
+  try {
+    const result = await AsyncStorage.setItem("@cart", JSON.stringify(value));
+  } catch (error) {
+    console.error("Error saving cart to AsyncStorage", error);
+  }
+};
 
 export const {
   addToCart,
