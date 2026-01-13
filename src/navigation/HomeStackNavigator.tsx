@@ -4,12 +4,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ProductListScreen from "../screens/Products/ProductListScreen";
 import ProductDetailsScreen from "../screens/Products/ProductDetailsScreen";
 
-export type RootStackParamList = {
+export type RootStackParams = {
   ProductList: undefined;
-  ProductDetails: { productId: string };
+  ProductDetails: { productId: number };
 };
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParams>();
 
 export default function HomeStackNavigator() {
   return (

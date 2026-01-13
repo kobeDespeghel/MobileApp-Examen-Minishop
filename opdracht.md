@@ -18,8 +18,8 @@
 
 ### 2) Data (DummyJSON) met TanStack Query
 
-- [ ] Product list ophalen en tonen: https://dummyjson.com/products
-- [ ] Product detail ophalen en tonen: https://dummyjson.com/products/{id}
+- [x] Product list ophalen en tonen: https://dummyjson.com/products
+- [x] Product detail ophalen en tonen: https://dummyjson.com/products/{id}
 - [ ] Toon duidelijke loading / error / empty states
 
 ### 3) Redux Toolkit (global state)

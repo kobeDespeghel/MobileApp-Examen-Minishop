@@ -1,17 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Button, Text, View } from "react-native";
-import { RootStackParamList } from "../../navigation/HomeStackNavigator";
+import { Button, FlatList, Text, View } from "react-native";
+import { RootStackParams } from "../../navigation/HomeStackNavigator";
 import { useProducts } from "../../hooks/queries/useProducts";
 import Product from "../../models/Product";
+import ProductListItem from "../../components/Products/ProductListItem";
 
 export default function ProductListScreen() {
   const { data: products, isLoading, error, refetch } = useProducts();
-
-  const navigation =
-    useNavigation<
-      NativeStackNavigationProp<RootStackParamList, "ProductList">
-    >();
 
   if (isLoading)
     return (
@@ -30,14 +26,9 @@ export default function ProductListScreen() {
   return (
     <View>
       <Text>Product List Screen</Text>
-      {products?.map((product: Product) => {
-        return <Text key={product.id}>{product.title}</Text>;
-      })}
-      <Button
-        title="details"
-        onPress={() =>
-          navigation.navigate("ProductDetails", { productId: "1" })
-        }
+      <FlatList
+        data={products}
+        renderItem={({ item }) => <ProductListItem product={item} />}
       />
     </View>
   );

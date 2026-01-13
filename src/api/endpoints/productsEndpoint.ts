@@ -1,7 +1,7 @@
 import { get } from "../client";
 import Product from "../../models/Product";
 import { ApiError } from "../../models/Error";
-import ApiResponse from "../../models/ApiResponse";
+import { isProduct } from "../../Validators/productValidators";
 
 export async function fetchProducts() {
   const result = await get("products");
@@ -17,12 +17,18 @@ export async function fetchProducts() {
   return result.products as Product[];
 }
 
-export async function fetchProductById(
-  Id: number
-): Promise<Product | ApiError> {
+export async function fetchProductById(Id: number) {
   const result = await get(`products/${Id}`);
 
-  if (result.type === "ApiError") return result;
+  console.log(result);
+
+  if (!result || !isProduct(result)) {
+    const error: ApiError = new Error(
+      "Invalid ProductResponse: missing or invalid 'product' key"
+    );
+    error.data = result;
+    throw error;
+  }
 
   return result as Product;
 }
