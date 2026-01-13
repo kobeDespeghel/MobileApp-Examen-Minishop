@@ -23,6 +23,11 @@ export default function ProfileScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View>
+        <Text style={[styles.heading, { color: colors.text }]}>
+          Kobe Despeghel
+        </Text>
+      </View>
       <View
         style={[
           styles.cartCard,
