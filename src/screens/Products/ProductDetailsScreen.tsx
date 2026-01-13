@@ -1,7 +1,9 @@
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { RootStackParams } from "../../navigation/HomeStackNavigator";
-import { Route, RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { useProduct } from "../../hooks/queries/useProducts";
+import { useSelector } from "react-redux";
+import { selectThemeColors } from "../../redux/selectors/themeSelectors";
 
 type Props = RouteProp<RootStackParams, "ProductDetails">;
 
@@ -10,19 +12,67 @@ export default function ProductDetailsScreen() {
   const { productId } = route.params;
 
   const { data: product, isLoading, error, refetch } = useProduct(productId);
+  const colors = useSelector(selectThemeColors);
 
   return (
-    <View>
-      <Text>Product Details Screen: {productId}</Text>
-      {isLoading && <Text>Loading...</Text>}
-      {error && <Text>Error loading product details</Text>}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.heading, { color: colors.text }]}>
+        Product Details: {productId}
+      </Text>
+      {isLoading && <Text style={{ color: colors.text }}>Loading...</Text>}
+      {error && (
+        <Text style={{ color: colors.error }}>
+          Error loading product details
+        </Text>
+      )}
       {product && (
-        <>
-          <Text>Title: {product.title}</Text>
-          <Text>Description: {product.description}</Text>
-          <Text>Price: ${product.price}</Text>
-        </>
+        <View
+          style={[
+            styles.card,
+            { backgroundColor: colors.surface, borderColor: colors.border },
+          ]}
+        >
+          <Text style={[styles.title, { color: colors.text }]}>
+            {product.title}
+          </Text>
+          <Text style={[styles.description, { color: colors.textSecondary }]}>
+            {product.description}
+          </Text>
+          <Text style={[styles.price, { color: colors.secondary }]}>
+            ${product.price}
+          </Text>
+        </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: "700",
+    marginBottom: 12,
+  },
+  card: {
+    padding: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 14,
+    marginBottom: 10,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+});

@@ -1,35 +1,52 @@
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Button, FlatList, Text, View } from "react-native";
-import { RootStackParams } from "../../navigation/HomeStackNavigator";
+import { FlatList, Text, View, StyleSheet } from "react-native";
 import { useProducts } from "../../hooks/queries/useProducts";
-import Product from "../../models/Product";
 import ProductListItem from "../../components/Products/ProductListItem";
+import { useSelector } from "react-redux";
+import { selectThemeColors } from "../../redux/selectors/themeSelectors";
 
 export default function ProductListScreen() {
   const { data: products, isLoading, error, refetch } = useProducts();
+  const colors = useSelector(selectThemeColors);
 
   if (isLoading)
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <Text style={{ color: colors.text }}>Loading...</Text>
       </View>
     );
 
   if (error)
     return (
-      <View>
-        <Text>Error loading products</Text>
+      <View style={[styles.center, { backgroundColor: colors.background }]}>
+        <Text style={{ color: colors.error }}>Error loading products</Text>
       </View>
     );
 
   return (
-    <View>
-      <Text>Product List Screen</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <Text style={[styles.title, { color: colors.text }]}>Products</Text>
       <FlatList
         data={products}
         renderItem={({ item }) => <ProductListItem product={item} />}
+        contentContainerStyle={{ paddingBottom: 12 }}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 12,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

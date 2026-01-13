@@ -1,9 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useSelector } from "react-redux";
 
 //local imports
 import ProductListScreen from "../screens/Products/ProductListScreen";
 import ProductDetailsScreen from "../screens/Products/ProductDetailsScreen";
 import ThemeButton from "../components/ThemeButton";
+import { selectThemeColors } from "../redux/selectors/themeSelectors";
 
 export type RootStackParams = {
   ProductList: undefined;
@@ -13,8 +15,17 @@ export type RootStackParams = {
 const Stack = createNativeStackNavigator<RootStackParams>();
 
 export default function HomeStackNavigator() {
+  const colors = useSelector(selectThemeColors);
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.surface },
+        headerTitleStyle: { color: colors.text },
+        headerTintColor: colors.primary,
+        headerShadowVisible: false,
+      }}
+    >
       <Stack.Screen
         name="ProductList"
         component={ProductListScreen}
