@@ -1,23 +1,11 @@
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { CartProduct } from "../../models/Product";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../../navigation/HomeStackNavigator";
-import { useDispatch } from "react-redux";
-import {
-  decreaseQuantity,
-  increaseQuantity,
-  removeFromCart,
-  setQuantity,
-} from "../../redux/slices/cartSlice";
 import { useSelector } from "react-redux";
 import { selectThemeColors } from "../../redux/selectors/themeSelectors";
+import AddToCart from "./AddToCart";
 
 interface Props {
   product: CartProduct;
@@ -26,16 +14,8 @@ interface Props {
 export default function ProductListItem({ product }: Props) {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams, "ProductList">>();
-  //   const [quantity, setQuantity] = useState(product.quantity);
 
-  const dispatch = useDispatch();
   const colors = useSelector(selectThemeColors);
-
-  //   const onAddToCart = () => {
-  //     const cartProduct = { ...product, quantity };
-
-  //     dispatch(addToCart(cartProduct));
-  //   };
 
   return (
     <TouchableOpacity
@@ -70,62 +50,7 @@ export default function ProductListItem({ product }: Props) {
           </Text>
         </View>
 
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={[styles.removeButton, { backgroundColor: colors.error }]}
-            onPress={() => dispatch(removeFromCart(product.id))}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.buttonText, { color: colors.surface }]}>
-              Remove
-            </Text>
-          </TouchableOpacity>
-
-          <View
-            style={[
-              styles.quantityContainer,
-              {
-                backgroundColor: colors.background,
-                borderColor: colors.border,
-              },
-            ]}
-          >
-            <TouchableOpacity
-              onPress={() => dispatch(decreaseQuantity(product.id))}
-              style={styles.quantityButton}
-            >
-              <Text style={[styles.quantityButtonText, { color: colors.text }]}>
-                −
-              </Text>
-            </TouchableOpacity>
-            <TextInput
-              style={[styles.quantityInput, { color: colors.text }]}
-              placeholderTextColor={colors.textSecondary}
-              selectionColor={colors.primary}
-              cursorColor={colors.primary}
-              value={product.quantity.toString()}
-              onChangeText={(text) => {
-                const num = parseInt(text) || 1;
-                dispatch(
-                  setQuantity({
-                    productId: product.id,
-                    quantity: Math.max(1, num),
-                  })
-                );
-              }}
-              keyboardType="number-pad"
-              maxLength={3}
-            />
-            <TouchableOpacity
-              onPress={() => dispatch(increaseQuantity(product.id))}
-              style={styles.quantityButton}
-            >
-              <Text style={[styles.quantityButtonText, { color: colors.text }]}>
-                +
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <AddToCart product={product} />
       </View>
     </TouchableOpacity>
   );
@@ -159,39 +84,5 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 12,
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  removeButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 6,
-  },
-  buttonText: {
-    fontWeight: "600",
-    fontSize: 13,
-  },
-  quantityContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderRadius: 6,
-    borderWidth: 1,
-  },
-  quantityButton: {
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-  },
-  quantityButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  quantityInput: {
-    width: 40,
-    textAlign: "center",
-    fontSize: 13,
-    fontWeight: "600",
   },
 });

@@ -1,26 +1,17 @@
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import Product from "../../models/Product";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParams } from "../../navigation/HomeStackNavigator";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addToCart,
-  removeFromCart,
-  setQuantity as setQuantityCartSlice,
-} from "../../redux/slices/cartSlice";
+import { setQuantity as setQuantityCartSlice } from "../../redux/slices/cartSlice";
 import {
   selectIsProductInCart,
   selectProductQuantity,
 } from "../../redux/selectors/cartSelectors";
 import { selectThemeColors } from "../../redux/selectors/themeSelectors";
+import AddToCart from "./AddToCart";
 
 interface Props {
   product: Product;
@@ -58,23 +49,23 @@ export default function ProductListItem({ product }: Props) {
     }
   }, [quantity]);
 
-  const onAddToCart = () => {
-    const cartProduct = { ...product, quantity };
-    dispatch(addToCart(cartProduct));
-  };
+  // const onAddToCart = () => {
+  //   const cartProduct = { ...product, quantity };
+  //   dispatch(addToCart(cartProduct));
+  // };
 
-  const onRemoveFromCart = () => {
-    setQuantity(1);
-    dispatch(removeFromCart(product.id));
-  };
+  // const onRemoveFromCart = () => {
+  //   setQuantity(1);
+  //   dispatch(removeFromCart(product.id));
+  // };
 
-  const handleButtonPress = () => {
-    if (isInCart) {
-      onRemoveFromCart();
-    } else {
-      onAddToCart();
-    }
-  };
+  // const handleButtonPress = () => {
+  //   if (isInCart) {
+  //     onRemoveFromCart();
+  //   } else {
+  //     onAddToCart();
+  //   }
+  // };
 
   return (
     <TouchableOpacity
@@ -110,7 +101,8 @@ export default function ProductListItem({ product }: Props) {
           </Text>
         </View>
 
-        <View style={styles.footer}>
+        <AddToCart product={product} />
+        {/* <View style={styles.footer}>
           <TouchableOpacity
             style={
               isInCart
@@ -164,7 +156,7 @@ export default function ProductListItem({ product }: Props) {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </View>
     </TouchableOpacity>
   );

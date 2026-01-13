@@ -4,6 +4,7 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { useProduct } from "../../hooks/queries/useProducts";
 import { useSelector } from "react-redux";
 import { selectThemeColors } from "../../redux/selectors/themeSelectors";
+import AddToCart from "../../components/Products/AddToCart";
 
 type Props = RouteProp<RootStackParams, "ProductDetails">;
 
@@ -41,6 +42,7 @@ export default function ProductDetailsScreen() {
           <Text style={[styles.price, { color: colors.secondary }]}>
             ${product.price}
           </Text>
+          <AddToCart product={product} />
         </View>
       )}
     </View>
@@ -74,5 +76,6 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: "700",
+    marginBottom: 12,
   },
 });

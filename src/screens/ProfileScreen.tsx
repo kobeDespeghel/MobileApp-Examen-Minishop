@@ -32,7 +32,7 @@ export default function ProfileScreen() {
         <Text style={[styles.heading, { color: colors.text }]}>
           My Cart Summary
         </Text>
-        (
+
         <>
           <View style={[styles.totalRow, { borderTopColor: colors.border }]}>
             <Text style={[styles.totalLabel, { color: colors.text }]}>
@@ -52,7 +52,6 @@ export default function ProfileScreen() {
             </Text>
           </TouchableOpacity>
         </>
-        )
       </View>
     </View>
   );

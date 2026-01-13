@@ -52,7 +52,7 @@
 
 Kies max. 2 van de volgende:
 
-- [ ] Search met debounce
+- [x] Search met debounce
 - [ ] Load more pagination
 - [ ] Favorites (toggle + lijst op Profile)
 - [ ] Extra setting (grid/list of show ratings)
