@@ -20,7 +20,7 @@
 
 - [x] Product list ophalen en tonen: https://dummyjson.com/products
 - [x] Product detail ophalen en tonen: https://dummyjson.com/products/{id}
-- [ ] Toon duidelijke loading / error / empty states
+- [x] Toon duidelijke loading / error / empty states
 
 ### 3) Redux Toolkit (global state)
 
@@ -45,8 +45,8 @@
 
 ### 6) UI/UX
 
-- [ ] Nette product cards en layout
-- [ ] UI states zijn zichtbaar en netjes
+- [x] Nette product cards en layout
+- [x] UI states zijn zichtbaar en netjes
 
 ## EXTRA PUNTEN (kies max 2)
 
