@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 //local imports
 import ProductListScreen from "../screens/Products/ProductListScreen";
 import ProductDetailsScreen from "../screens/Products/ProductDetailsScreen";
+import ThemeButton from "../components/ThemeButton";
 
 export type RootStackParams = {
   ProductList: undefined;
@@ -14,8 +15,20 @@ const Stack = createNativeStackNavigator<RootStackParams>();
 export default function HomeStackNavigator() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ProductList" component={ProductListScreen} />
-      <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
+      <Stack.Screen
+        name="ProductList"
+        component={ProductListScreen}
+        options={{
+          headerRight: () => <ThemeButton />,
+        }}
+      />
+      <Stack.Screen
+        name="ProductDetails"
+        component={ProductDetailsScreen}
+        options={{
+          headerRight: () => <ThemeButton />,
+        }}
+      />
     </Stack.Navigator>
   );
 }

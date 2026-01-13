@@ -20,6 +20,7 @@ import {
   selectIsProductInCart,
   selectProductQuantity,
 } from "../../redux/selectors/cartSelectors";
+import { selectThemeColors } from "../../redux/selectors/themeSelectors";
 
 interface Props {
   product: Product;
@@ -32,6 +33,8 @@ export default function ProductListItem({ product }: Props) {
   const quantityInCart = useSelector((state: any) =>
     selectProductQuantity(state, product.id)
   );
+
+  const colors = useSelector(selectThemeColors);
 
   const [quantity, setQuantity] = useState(quantityInCart);
 
@@ -81,36 +84,69 @@ export default function ProductListItem({ product }: Props) {
           productId: product.id,
         })
       }
+      style={{ backgroundColor: colors.background }}
     >
-      <View style={styles.card}>
+      <View
+        style={[
+          styles.card,
+          {
+            backgroundColor: colors.surface,
+            borderColor: colors.border,
+          },
+        ]}
+      >
         <View style={styles.content}>
-          <Text style={styles.title}>{product.title}</Text>
-          <Text style={styles.price}>${product.price.toFixed(2)}</Text>
-          <Text style={styles.description} numberOfLines={2}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            {product.title}
+          </Text>
+          <Text style={[styles.price, { color: colors.secondary }]}>
+            ${product.price.toFixed(2)}
+          </Text>
+          <Text
+            style={[styles.description, { color: colors.textSecondary }]}
+            numberOfLines={2}
+          >
             {product.description}
           </Text>
         </View>
 
         <View style={styles.footer}>
           <TouchableOpacity
-            style={isInCart ? styles.removeButton : styles.addButton}
+            style={
+              isInCart
+                ? [styles.removeButton, { backgroundColor: colors.error }]
+                : [styles.addButton, { backgroundColor: colors.primary }]
+            }
             onPress={handleButtonPress}
             activeOpacity={0.7}
           >
-            <Text style={styles.buttonText}>
+            <Text style={[styles.buttonText, { color: colors.surface }]}>
               {isInCart ? "Remove from Cart" : "Add to Cart"}
             </Text>
           </TouchableOpacity>
 
-          <View style={styles.quantityContainer}>
+          <View
+            style={[
+              styles.quantityContainer,
+              {
+                backgroundColor: colors.background,
+                borderColor: colors.border,
+              },
+            ]}
+          >
             <TouchableOpacity
               onPress={() => setQuantity(Math.max(1, quantity - 1))}
               style={styles.quantityButton}
             >
-              <Text style={styles.quantityButtonText}>−</Text>
+              <Text style={[styles.quantityButtonText, { color: colors.text }]}>
+                −
+              </Text>
             </TouchableOpacity>
             <TextInput
-              style={styles.quantityInput}
+              style={[styles.quantityInput, { color: colors.text }]}
+              placeholderTextColor={colors.textSecondary}
+              selectionColor={colors.primary}
+              cursorColor={colors.primary}
               value={quantity.toString()}
               onChangeText={(text) => {
                 const num = parseInt(text) || 1;
@@ -123,7 +159,9 @@ export default function ProductListItem({ product }: Props) {
               onPress={() => setQuantity(quantity + 1)}
               style={styles.quantityButton}
             >
-              <Text style={styles.quantityButtonText}>+</Text>
+              <Text style={[styles.quantityButtonText, { color: colors.text }]}>
+                +
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -134,11 +172,11 @@ export default function ProductListItem({ product }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff",
     borderRadius: 8,
     padding: 12,
     marginVertical: 8,
     marginHorizontal: 12,
+    borderWidth: 1,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -156,12 +194,10 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#2ecc71",
     marginBottom: 4,
   },
   description: {
     fontSize: 12,
-    color: "#666",
   },
   footer: {
     flexDirection: "row",
@@ -169,29 +205,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   addButton: {
-    backgroundColor: "#3498db",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 6,
   },
   removeButton: {
-    backgroundColor: "#e74c3c",
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 6,
   },
   buttonText: {
-    color: "#fff",
     fontWeight: "600",
     fontSize: 13,
   },
   quantityContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: "#ddd",
   },
   quantityButton: {
     paddingHorizontal: 8,
@@ -200,7 +231,6 @@ const styles = StyleSheet.create({
   quantityButtonText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#333",
   },
   quantityInput: {
     width: 40,

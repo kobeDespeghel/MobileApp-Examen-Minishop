@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import CartScreen from "../screens/CartScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import HomeStackNavigator from "./HomeStackNavigator";
+import ThemeButton from "../components/ThemeButton";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchCartFromStorage } from "../redux/slices/cartSlice";
@@ -24,8 +25,20 @@ export default function MainTabNavigator() {
         component={HomeStackNavigator}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Cart" component={CartScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen
+        name="Cart"
+        component={CartScreen}
+        options={{
+          headerRight: () => <ThemeButton />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{
+          headerRight: () => <ThemeButton />,
+        }}
+      />
     </Tab.Navigator>
   );
 }
