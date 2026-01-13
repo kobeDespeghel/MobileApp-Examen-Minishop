@@ -5,10 +5,10 @@ import {
   fetchProducts,
 } from "../../api/endpoints/productsEndpoint";
 
-export function useProducts() {
+export function useProducts(searchQuery?: string) {
   return useQuery({
-    queryKey: queryKeys.products.list(),
-    queryFn: () => fetchProducts(),
+    queryKey: queryKeys.products.list(searchQuery),
+    queryFn: () => fetchProducts(searchQuery),
   });
 }
 

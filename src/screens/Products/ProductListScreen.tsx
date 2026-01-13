@@ -3,33 +3,70 @@ import { useProducts } from "../../hooks/queries/useProducts";
 import ProductListItem from "../../components/Products/ProductListItem";
 import { useSelector } from "react-redux";
 import { selectThemeColors } from "../../redux/selectors/themeSelectors";
+import Search from "../../components/Search";
+import { useState } from "react";
 
 export default function ProductListScreen() {
-  const { data: products, isLoading, error, refetch } = useProducts();
+  const [searchQuery, setSearchQuery] = useState("");
+  const {
+    data: products,
+    isLoading,
+    error,
+    refetch,
+  } = useProducts(searchQuery);
   const colors = useSelector(selectThemeColors);
 
-  if (isLoading)
-    return (
-      <View style={[styles.center, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.text }}>Loading...</Text>
-      </View>
-    );
+  const searchProducts = (query: string) => {
+    setSearchQuery(query);
+    refetch();
+  };
 
-  if (error)
-    return (
-      <View style={[styles.center, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.error }}>Error loading products</Text>
-      </View>
-    );
+  const RenderIsLoading = () => {
+    if (isLoading)
+      return (
+        <View style={[styles.center, { backgroundColor: colors.background }]}>
+          <Text style={{ color: colors.text }}>Loading...</Text>
+        </View>
+      );
+  };
+
+  const RenderError = () => {
+    if (error)
+      return (
+        <View style={[styles.center, { backgroundColor: colors.background }]}>
+          <Text style={{ color: colors.error }}>Error loading products</Text>
+        </View>
+      );
+  };
+
+  const RenderProducts = () => {
+    if (!products || products.length === 0) {
+      return (
+        <View style={[styles.center, { backgroundColor: colors.background }]}>
+          <Text style={{ color: colors.text }}>No products found</Text>
+        </View>
+      );
+    } else {
+      return (
+        <FlatList
+          data={products}
+          renderItem={({ item }) => <ProductListItem product={item} />}
+          contentContainerStyle={{ paddingBottom: 12 }}
+        />
+      );
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Products</Text>
-      <FlatList
-        data={products}
-        renderItem={({ item }) => <ProductListItem product={item} />}
-        contentContainerStyle={{ paddingBottom: 12 }}
-      />
+      {/* <Text style={[styles.title, { color: colors.text }]}>Products</Text> */}
+      <Search onSearch={searchProducts} query={searchQuery} />
+
+      {RenderIsLoading()}
+
+      {RenderError()}
+
+      {RenderProducts()}
     </View>
   );
 }
@@ -47,6 +84,5 @@ const styles = StyleSheet.create({
   center: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
   },
 });

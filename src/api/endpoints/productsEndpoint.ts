@@ -3,8 +3,9 @@ import Product from "../../models/Product";
 import { ApiError } from "../../models/Error";
 import { isProduct } from "../../Validators/productValidators";
 
-export async function fetchProducts() {
-  const result = await get("products");
+export async function fetchProducts(query?: string) {
+  const searchParam = query ? `/search?q=${encodeURIComponent(query)}` : "";
+  const result = await get("products" + searchParam);
 
   if (!result.products || !Array.isArray(result.products)) {
     var error: ApiError = new Error(
