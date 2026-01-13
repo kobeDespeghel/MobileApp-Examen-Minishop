@@ -34,14 +34,14 @@
 
 ### 4) Profile (cross-tab bewijs)
 
-- [ ] Toon op Profile:
-  - [ ] item count + subtotal (via selectors)
-  - [ ] knop “Go to Cart”
+- [x] Toon op Profile:
+  - [x] item count + subtotal (via selectors)
+  - [x] knop “Go to Cart”
 
 ### 5) Theme
 
-- [ ] Light/Dark toggle
-- [ ] Theme zichtbaar toegepast (background/tekst/cards)
+- [x] Light/Dark toggle
+- [x] Theme zichtbaar toegepast (background/tekst/cards)
 
 ### 6) UI/UX
 
@@ -56,7 +56,7 @@ Kies max. 2 van de volgende:
 - [ ] Load more pagination
 - [ ] Favorites (toggle + lijst op Profile)
 - [ ] Extra setting (grid/list of show ratings)
-- [ ] AsyncStorage persist (theme + cart)
+- [x] AsyncStorage persist (theme + cart)
 
 ## Werkwijze (verplicht)
 

@@ -41,9 +41,10 @@ export default function MainTabNavigator() {
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name="Shopping Cart"
+        name="Cart"
         component={CartScreen}
         options={{
+          headerTitle: "Shopping Cart",
           headerRight: () => <ThemeButton />,
         }}
       />
